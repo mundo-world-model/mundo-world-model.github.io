@@ -206,14 +206,16 @@ async function init() {
   bot.visible = false;
   scene.add(bot);
   let botPoses = null, botAsked = false;
-  const loadBot = () => botAsked || (botAsked = true, fetch('story/g1-anim.bin').then(r => r.arrayBuffer()).then(buf => {
+  const loadBot = () => botAsked || (botAsked = true, fetch('story/g1-anim.bin').then(r => r.arrayBuffer()).then(async buf => {
     const nv = g1.parts.reduce((a, p) => a + p.vertices, 0), nt = g1.parts.reduce((a, p) => a + p.triangles, 0);
     const V = new Float32Array(buf, 0, nv * 3), T = new Uint32Array(buf, nv * 12, nt * 3);
     const mats = {robot: new THREE.MeshLambertMaterial({color: PALETTE.new_object, transparent: true}), bag: new THREE.MeshLambertMaterial({color: '#fbfbf9', transparent: true})};
     const lines = {robot: new THREE.LineBasicMaterial({color: new THREE.Color(PALETTE.new_object).multiplyScalar(.72), transparent: true}),
       bag: new THREE.LineBasicMaterial({color: new THREE.Color('#fbfbf9').multiplyScalar(.7), transparent: true})};
-    let vo = 0, to = 0;
+    let vo = 0, to = 0, slice = performance.now();
     for (const p of g1.parts) {
+      // a few parts per task: all 53 (their normals and edges) at once held a frame for about 0.1 s just as 03's boxes came in
+      if (performance.now() - slice > 8) { await new Promise(r => setTimeout(r)); slice = performance.now(); }
       const g = new THREE.BufferGeometry();
       g.setAttribute('position', new THREE.BufferAttribute(V.slice(vo * 3, (vo + p.vertices) * 3), 3));
       g.setIndex(new THREE.BufferAttribute(T.slice(to * 3, (to + p.triangles) * 3), 1));
@@ -254,6 +256,9 @@ async function init() {
     return {gen, path, poses: path.poses.map(cvToThree)};
   };
   const cases = {arrival: makeCase('hero-arrival', story.paths.arrival, false), g1: makeCase('hero-g1', g1, false)};
+  // the page's first video load sets up its media pipeline, which held a frame for about 0.1 s as 03 began (where warm() asks for
+  // the arrival): set it up here, before the first frame, on the metadata only; the video itself still downloads from 03
+  cases.arrival.gen.preload = 'metadata';
   // each video plays once, from the beat its camera is reached on, and holds its last frame a moment
   FLOW[3].hold = (B.flyIn[1] - FLOW[3].a) + story.paths.arrival.frames / FPS - FLOW[3].move + .3;
   FLOW[4].hold = (B.hop[1] - FLOW[4].a) + g1.frames / FPS - FLOW[4].move + .3;
