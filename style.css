@@ -89,21 +89,16 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .hero-text h1{font:500 clamp(52px,5.4vw,82px)/.98 var(--sans);letter-spacing:-.045em;margin:0}
 .hero-text h1 > .hero-subtitle{display:block;font-weight:400;font-size:.47em;line-height:1.15;letter-spacing:-.025em;color:var(--ink-2);margin-top:.3em}
 .dek{font-size:16.5px;line-height:1.5;color:var(--ink-3);margin:26px 0 30px;max-width:460px}
-/* Blog and Code under the line: one pill in the page's ink. Blog is filled and its arrow lifts toward the corner; Code is the same pill
-   not yet inked in (a dashed outline, muted type) whose brackets open while a small note says the code is coming. It still opens. */
 .hero-links{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 40px}
 .hl{position:relative;display:inline-flex;align-items:center;gap:9px;height:40px;padding:0 17px 0 15px;border-radius:99px;font:500 14.5px/1 var(--sans);
   letter-spacing:-.005em;text-decoration:none;transition:background .25s,color .25s,border-color .25s}
 .hl svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
-.hl-blog{background:var(--ink);color:var(--paper);border:1px solid var(--ink)}
-.hl-blog:hover{background:#2c2b28}
+.hl-blog,.hl-code{background:var(--ink);color:var(--paper);border:1px solid var(--ink)}
+.hl-blog:hover,.hl-code:hover{background:#2c2b28}
 .hl-blog i{position:relative;width:9px;height:9px;margin-left:1px;transition:transform .35s cubic-bezier(.2,.7,.2,1)}
 .hl-blog i::before{content:'';position:absolute;right:0;top:0;width:6px;height:6px;border-top:1.5px solid currentColor;border-right:1.5px solid currentColor}
 .hl-blog i::after{content:'';position:absolute;right:.5px;top:.5px;width:1.5px;height:11px;background:currentColor;transform-origin:50% 0;transform:rotate(45deg)}
 .hl-blog:hover i{transform:translate(2px,-2px)}
-.hl-code{color:var(--ink-3);border:1px dashed color-mix(in srgb,var(--ink) 30%,transparent);background:transparent}
-.hl-code svg{color:var(--ink-4)}
-.hl-code:hover{color:var(--ink-2);border-color:color-mix(in srgb,var(--ink) 45%,transparent)}
 .hl-code svg path{transition:transform .35s cubic-bezier(.2,.7,.2,1)}
 .hl-code:hover .l{transform:translateX(-1.5px)}
 .hl-code:hover .r{transform:translateX(1.5px)}
